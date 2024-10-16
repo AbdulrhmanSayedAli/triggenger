@@ -151,6 +151,20 @@ pycodestyle = ">=2.12.0,<2.13.0"
 pyflakes = ">=3.2.0,<3.3.0"
 
 [[package]]
+name = "imapclient"
+version = "3.0.1"
+description = "Easy-to-use, Pythonic and complete IMAP client library"
+optional = false
+python-versions = ">=3.7.0"
+files = [
+    {file = "IMAPClient-3.0.1-py2.py3-none-any.whl", hash = "sha256:d77d77caa4123e0233b5cf2b9c54a078522e63270b88d3f48653a28637fd8828"},
+    {file = "IMAPClient-3.0.1.zip", hash = "sha256:78e6d62fbfbbe233e1f0e0e993160fd665eb1fd35973acddc61c15719b22bc02"},
+]
+
+[package.extras]
+doc = ["sphinx"]
+
+[[package]]
 name = "iniconfig"
 version = "2.0.0"
 description = "brain-dead simple config-ini parsing"
@@ -372,4 +386,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "ee2ce25f84ec11d4445232eca1c3063f313e006c0d6117ee8bf0eb2119b47d76"
+content-hash = "999263977758357ab8c625ede881e0230537ddff37d97fd6967d8e65a28bc1a4"
