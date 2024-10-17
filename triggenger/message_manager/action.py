@@ -55,12 +55,10 @@ class Action:
         str
             A formatted string containing the action's details in a readable format.
         """
-        details = f"Action Title: {self.title}\n"
-        details += f"Action Description: {self.description}\n"
+        details = f"Title: {self.title}\n"
+        details += f"Description: {self.description}\n"
         details += "Parameter Descriptions:\n"
-
-        for i, param_desc in enumerate(self.params_description, 1):
-            details += f"  {i}. {param_desc}\n"
+        details += "[" + ",".join(self.params_description) + "]"
 
         return details.strip()
 

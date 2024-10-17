@@ -83,3 +83,20 @@ class Trigger:
         """
         # Implement custom error handling logic, such as logging the error details.
         print(f"Error processing message from {message.sender}: {error}")
+
+    def displayActions(self) -> str:
+        """
+        Returns a structured string that represents the trigger actions details: title, description,
+        and parameter descriptions in a format that's easy for AI systems to read.
+
+        Returns:
+        --------
+        str
+            A formatted string containing the action's details in a readable format.
+        """
+        details = ""
+
+        for i, action in enumerate(self.actions, 1):
+            details += "{" + f"TYPE:{i}. {action.display()}" + "},"
+
+        return details.strip()
