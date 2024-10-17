@@ -5,7 +5,7 @@ from triggenger.message_manager.message import Message
 ActionPerformCallable = Callable[
     [
         Message,  # A Message object that contains information like sender, source, date, etc.
-        list[str],  # A list of extracted parameters, each represented as a string.
+        dict,  # A dict of key value extracted parameters, each represented as a string.
     ],
     None,  # The callable does not return any value (returns None).
 ]

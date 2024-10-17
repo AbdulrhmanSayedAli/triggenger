@@ -27,7 +27,7 @@ class Trigger:
         """
         self.actions = actions
 
-    def onMessageMatched(self, message: Message, action: Action, params: List[str]) -> None:
+    def onMessageMatched(self, message: Message, action: Action, params: dict) -> None:
         """
         Executes the specified action when a message matches the trigger's conditions.
 
@@ -37,7 +37,7 @@ class Trigger:
             The Message object that contains information about the message that matched.
         action : Action
             The Action object to be performed when the message matches.
-        params : list[str]
+        params : dict
             A list of parameters extracted from the message that are used in the action.
 
         Returns:
