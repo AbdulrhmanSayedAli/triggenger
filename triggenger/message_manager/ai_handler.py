@@ -20,20 +20,18 @@ class AIHandler:
     """
 
     system_message_template = {
-        {
-            "purpose": "Classify incoming messages, extract key parameters, and generate necessary text based on predefined message types.",
-            "instructions": [
-                "You will receive a series of messages.",
-                "For each message, assign it to exactly one of the predefined message types. If a message could fit multiple types, choose the most relevant one.",
-                "Extract the required parameters for the assigned message type, following the parameter format: (param_name: description of what to extract). If a parameter is not present in the message, leave its value as an empty string.",
-                "If a parameter requires additional information to be meaningful or complete, generate a relevant text or value based on the context of the message.",
-                'Respond in the following JSON format: {"type": "message type number", "params": {"param1": "value1", "param2": "value2", ...}}.',
-                "If the message does not fit any of the predefined types, assign it to type 0, with an empty 'params' object.",
-                "Ensure that all responses are in valid JSON format. In case of unclear or incomplete messages, do your best to classify them and provide the most relevant information.",
-                "If the message is too ambiguous or noisy to categorize, classify it as type 0 and explain why it's uncategorizable in a comment.",
-                'Here is an example of a response: {"type": "2", "params": {"param1": "example value", "param2": ""}}.',
-            ],
-        }
+        "purpose": "Classify incoming messages, extract key parameters, and generate necessary text based on predefined message types.",
+        "instructions": [
+            "You will receive a series of messages.",
+            "For each message, assign it to exactly one of the predefined message types. If a message could fit multiple types, choose the most relevant one.",
+            "Extract the required parameters for the assigned message type, following the parameter format: (param_name: description of what to extract). If a parameter is not present in the message, leave its value as an empty string.",
+            "If a parameter requires additional information to be meaningful or complete, generate a relevant text or value based on the context of the message.",
+            'Respond in the following JSON format: {"type": "message type number", "params": {"param1": "value1", "param2": "value2", ...}}.',
+            "If the message does not fit any of the predefined types, assign it to type 0, with an empty 'params' object.",
+            "Ensure that all responses are in valid JSON format. In case of unclear or incomplete messages, do your best to classify them and provide the most relevant information.",
+            "If the message is too ambiguous or noisy to categorize, classify it as type 0 and explain why it's uncategorizable in a comment.",
+            'Here is an example of a response: {"type": "2", "params": {"param1": "example value", "param2": ""}}.',
+        ],
     }
 
     def __init__(self, api_key: str):
