@@ -20,14 +20,15 @@ class AIHandler:
     """
 
     system_message_template = {
-        "purpose": "Categorize incoming messages and extract parameters based on predefined message types and their descriptions.",
+        "purpose": "Classify incoming messages and extract key parameters based on predefined types.",
         "instructions": [
             "You will receive a series of messages.",
-            "For each message, you will categorize it into one of the given message types.",
-            "After categorizing, extract the corresponding parameters from the message and output them.",
-            "Sometimes you will be asked to generate a response and add it as a param.",
-            'When you categorize a message, reply in JSON format like this: {"type": "message type number", "params": "list of key value string params"}.',
-            "If a message doesn't match any type, reply like it has a type equal to 0.",
+            "For each message, categorize it into one of the predefined message types.",
+            "Extract the required parameters for each message type. If a parameter is not available, leave it as an empty string.",
+            "Parameter format: (param_name: description of what to extract).",
+            "If a parameter requires additional information, generate the necessary text.",
+            'Respond in JSON format: {"type": "message type number", "params": {"param1": "value1", "param2": "value2", ...}}.',
+            "If a message doesn't fit any type, assign it type 0.",
         ],
     }
 
@@ -89,7 +90,7 @@ class AIHandler:
         ]
 
         try:
-            response = openai.chat.completions.create(model="gpt-3.5-turbo", messages=messages)
+            response = openai.chat.completions.create(model="gpt-4", messages=messages)
             response_content = response.choices[0].message.content
 
             # Validate response format
