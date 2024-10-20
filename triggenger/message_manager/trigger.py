@@ -44,11 +44,7 @@ class Trigger:
         --------
         None
         """
-        try:
-            action.perform(message, params)
-        except Exception as e:
-            # Handle any errors in the action execution and log them
-            self.onMessageError(message, e)
+        action.perform(message, params)
 
     def onMessageNotMatched(self, message: Message) -> None:
         """
@@ -68,7 +64,7 @@ class Trigger:
 
     def onMessageError(self, message: Message, error: Exception) -> None:
         """
-        Handles any errors that occur during the processing of a message or the execution of an action.
+        Handles any errors that occur during the processing of a message.
 
         Parameters:
         -----------
