@@ -13,6 +13,11 @@ class MessageManager:
         try:
             system_message = self.ai_handler.generate_system_message(self.trigger)
             response_str = self.ai_handler.categorize_message(message, system_message)
+            response_str = response_str.removeprefix("```json")
+            response_str = response_str.removeprefix("```")
+            response_str = response_str.removeprefix("`")
+            response_str = response_str.removesuffix("```")
+            response_str = response_str.removesuffix("`")
             response = json.loads(response_str)
             type = int(response["type"])
             if type == 0:
@@ -23,4 +28,5 @@ class MessageManager:
             params = response["params"]
             self.trigger.onMessageMatched(message, action, params)
         except Exception as e:
-            self.trigger.onMessageError(message, e)
+            # self.trigger.onMessageError(message, e)
+            raise e

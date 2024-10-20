@@ -3,6 +3,12 @@ import json
 import openai
 from triggenger.message_manager.trigger import Trigger
 from triggenger.message_manager.message import Message
+from pydantic import BaseModel
+
+
+class ResponseFormat(BaseModel):
+    type: int
+    # params: dict[str, str]
 
 
 class AIHandler:
@@ -117,7 +123,7 @@ class AIHandler:
         ]
 
         try:
-            response = openai.chat.completions.create(model="gpt-4", messages=messages)
+            response = openai.chat.completions.create(model="gpt-4o", messages=messages)
             response_content = response.choices[0].message.content
 
             # Validate response format
