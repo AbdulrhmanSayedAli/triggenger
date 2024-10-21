@@ -40,7 +40,7 @@ class OpenAIHandler(AIHandler):
     A concrete implementation of AIHandler that uses the OpenAI API to categorize messages.
     """
 
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, model: str = "gpt-4o-mini"):
         """
         Initializes the OpenAIHandler with the given API key and sets up OpenAI API configuration.
 
@@ -48,8 +48,11 @@ class OpenAIHandler(AIHandler):
         -----------
         api_key : str
             The API key required to access the OpenAI API.
+        model : str
+            The GPT model to use when categorizing a message.
         """
         self.api_key = api_key
+        self.model = model
         openai.api_key = api_key
 
     def categorize_message(self, message: Message, system_message: str) -> str:
@@ -79,7 +82,7 @@ class OpenAIHandler(AIHandler):
         ]
 
         try:
-            response = openai.chat.completions.create(model="gpt-4o", messages=messages)
+            response = openai.chat.completions.create(model=self.model, messages=messages, temperature=0.1)
             response_content = response.choices[0].message.content
 
             # Validate response format
