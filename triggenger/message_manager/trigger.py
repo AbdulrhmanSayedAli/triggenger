@@ -1,6 +1,12 @@
 from typing import List
 from triggenger.message_manager.action import Action
 from triggenger.message_manager.message import Message
+from typing import Optional
+from triggenger.message_manager.types import (
+    onMessageErrorCallable,
+    onMessageMatchedCallable,
+    onMessageNotMatchedCallable,
+)
 
 
 class Trigger:
@@ -13,21 +19,46 @@ class Trigger:
     -----------
     actions : list[Action]
         A list of actions to be performed when a message matches certain conditions.
+    onMessageMatched : Optional[onMessageMatchedCallable]
+        A callable to be executed when a message matches an action.
+    onMessageNotMatched : Optional[onMessageNotMatchedCallable]
+        A callable to be executed when a message does not match any action.
+    onMessageError : Optional[onMessageErrorCallable]
+        A callable to be executed when an error occurs during message processing.
     """
 
-    def __init__(self, actions: List[Action]):
+    def __init__(
+        self,
+        actions: List[Action],
+        onMessageMatched: Optional[onMessageMatchedCallable] = None,
+        onMessageNotMatched: Optional[onMessageNotMatchedCallable] = None,
+        onMessageError: Optional[onMessageErrorCallable] = None,
+    ):
         """
-        Initializes the Trigger object with a list of actions.
+        Initializes the Trigger object with a list of actions and optional event handlers.
 
         Parameters:
         -----------
         actions : list[Action]
             A list of Action objects to be associated with this Trigger. Each Action
             contains a perform function to execute when triggered.
+        onMessageMatched : Optional[onMessageMatchedCallable], optional
+            A callable function that is invoked when a message matches a condition.
+            If not provided, a default matching function is used.
+        onMessageNotMatched : Optional[onMessageNotMatchedCallable], optional
+            A callable function that is invoked when a message does not match any condition.
+            If not provided, a default not-matched function is used.
+        onMessageError : Optional[onMessageErrorCallable], optional
+            A callable function that is invoked when an error occurs during message processing.
+            If not provided, a default error handler is used.
         """
         self.actions = actions
+        self.onMessageMatched = onMessageMatched or self._default_onMessageMatched
+        self.onMessageNotMatched = onMessageNotMatched or self._default_onMessageNotMatched
+        self.onMessageError = onMessageError or self._default_onMessageError
 
-    def onMessageMatched(self, message: Message, action: Action, params: dict) -> None:
+    @staticmethod
+    def _default_onMessageMatched(message: Message, action: Action, params: dict) -> None:
         """
         Executes the specified action when a message matches the trigger's conditions.
 
@@ -46,7 +77,8 @@ class Trigger:
         """
         action.perform(message, params)
 
-    def onMessageNotMatched(self, message: Message) -> None:
+    @staticmethod
+    def _default_onMessageNotMatched(message: Message) -> None:
         """
         Handles the scenario where a message does not match any conditions for triggering an action.
 
@@ -62,7 +94,8 @@ class Trigger:
         # This method can be extended to log the message or perform any required operations.
         print(f"No action matched for message from {message.sender} with subject: {message.subject}")
 
-    def onMessageError(self, message: Message, error: Exception) -> None:
+    @staticmethod
+    def _default_onMessageError(message: Message, error: Exception) -> None:
         """
         Handles any errors that occur during the processing of a message.
 

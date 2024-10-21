@@ -38,7 +38,7 @@ class EmailManager:
         self.mailbox = mailbox
         self.client = client
         self.task_queue = queue.Queue()
-        self.on_email_received_callback = on_email_received_callback or self.default_email_callback
+        self.on_email_received_callback = on_email_received_callback or self._default_email_callback
 
         self.email_processor = EmailProcessor(
             clone_imap_client(client),
@@ -61,7 +61,7 @@ class EmailManager:
         setup_logging()
 
     @staticmethod
-    def default_email_callback(
+    def _default_email_callback(
         message: Message,
         msg_data: MessageData,
         msg_id: int,
