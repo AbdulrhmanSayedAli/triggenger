@@ -3,7 +3,7 @@ from .ai_handler import AIHandler, OpenAIHandler
 from .message_manager import MessageManager
 from .message import Message
 from .trigger import Trigger
-from .types import ActionPerformCallable
+from .types import ActionPerformCallable, onMessageMatchedCallable, onMessageNotMatchedCallable, onMessageErrorCallable
 
 
 __all__ = [
@@ -14,4 +14,7 @@ __all__ = [
     "Message",
     "Trigger",
     "ActionPerformCallable",
+    "onMessageMatchedCallable",
+    "onMessageNotMatchedCallable",
+    "onMessageErrorCallable",
 ]
