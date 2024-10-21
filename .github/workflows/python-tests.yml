@@ -1,7 +1,12 @@
 name: Python package
 
-on: [push, pull_request]
-
+on:
+  push:
+    branches:
+      - main # Trigger on any push to the main branch
+  pull_request:
+    branches:
+      - main # Trigger on PRs targeting main (created or updated)
 jobs:
   test:
     runs-on: ubuntu-latest
