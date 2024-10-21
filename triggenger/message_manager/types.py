@@ -1,6 +1,6 @@
 from typing import Callable
 from triggenger.message_manager.message import Message
-from triggenger.message_manager.action import Action
+from triggenger.message_manager.action import Action, ActionPerformCallable
 
 
 onMessageMatchedCallable = Callable[
@@ -42,3 +42,10 @@ onMessageErrorCallable represents the type signature for the callback function i
 occurs during the processing of a message. It receives the `Message` object and the `Exception` object
 that caused the error. This callback allows for custom error handling during message processing.
 """
+
+__all__ = [
+    "ActionPerformCallable",
+    "onMessageMatchedCallable",
+    "onMessageNotMatchedCallable",
+    "onMessageErrorCallable",
+]
