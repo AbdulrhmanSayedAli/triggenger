@@ -28,8 +28,8 @@ onMessageMatchedCallable = Callable[
 ]
 """
 onMessageMatchedCallable represents the type signature for the callback function invoked when
-a message matches the criteria for a specific action. It receives a `Message` object, the 
-`Action` object that matched, and a dictionary of extracted parameters. This callback allows 
+a message matches the criteria for a specific action. It receives a `Message` object, the
+`Action` object that matched, and a dictionary of extracted parameters. This callback allows
 custom handling of the matched message.
 """
 
@@ -40,8 +40,8 @@ onMessageNotMatchedCallable = Callable[
     None,  # The callable does not return any value (returns None).
 ]
 """
-onMessageNotMatchedCallable represents the type signature for the callback function invoked when 
-a message does not match any action criteria. It receives the `Message` object that failed to 
+onMessageNotMatchedCallable represents the type signature for the callback function invoked when
+a message does not match any action criteria. It receives the `Message` object that failed to
 match any trigger condition. This callback allows for custom handling of unmatched messages.
 """
 
