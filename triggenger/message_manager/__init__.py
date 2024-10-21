@@ -1,9 +1,9 @@
-from .action import Action
+from .action import Action, ActionPerformCallable
 from .ai_handler import AIHandler, OpenAIHandler
 from .message_manager import MessageManager
 from .message import Message
 from .trigger import Trigger
-from .types import ActionPerformCallable, onMessageMatchedCallable, onMessageNotMatchedCallable, onMessageErrorCallable
+from .types import onMessageMatchedCallable, onMessageNotMatchedCallable, onMessageErrorCallable
 
 
 __all__ = [

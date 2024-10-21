@@ -1,4 +1,21 @@
-from triggenger.message_manager.types import ActionPerformCallable
+from typing import Callable
+from triggenger.message_manager.message import Message
+
+
+ActionPerformCallable = Callable[
+    [
+        Message,  # A Message object that contains information like sender, source, date, etc.
+        dict,  # A dictionary of key-value pairs representing parameters extracted from the message.
+        # The keys are parameter names (usually strings) and the values can be various types
+        # depending on the action requirements.
+    ],
+    None,  # The callable does not return any value (returns None).
+]
+"""
+ActionPerformCallable represents the type signature for the `perform` method in an Action.
+It accepts a `Message` object and a dictionary of extracted parameters and performs an action.
+This callable does not return any value.
+"""
 
 
 class Action:
