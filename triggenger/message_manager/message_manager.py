@@ -55,6 +55,7 @@ class MessageManager:
                 "If the message is too ambiguous or noisy to categorize, classify it as type 0 and explain why it's "
                 "uncategorizable in a comment."
             ),
+            ("Don't write any comments in the response only return the json response."),
             'Here is an example of a response: {"type": "2", "params": {"param1": "example value", "param2": ""}}.',
         ],
     }
