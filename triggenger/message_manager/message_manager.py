@@ -105,7 +105,7 @@ class MessageManager:
 
             # Step 3: Parse the response into JSON
             response = json.loads(response_str)
-            message_type = int(response.get("type", -1))  # Default to -1 if type is missing
+            message_type = int(response["type"])  # Default to -1 if type is missing
 
             if message_type == 0:
                 # Trigger action if no match is found
