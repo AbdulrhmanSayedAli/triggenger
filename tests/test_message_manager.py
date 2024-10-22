@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 from triggenger.message_manager.message import Message
 from triggenger.message_manager.trigger import Trigger
 from triggenger.message_manager.ai_handler import AIHandler
