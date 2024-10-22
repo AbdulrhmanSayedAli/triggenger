@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import Mock
 from triggenger.message_manager.trigger import Trigger
 from triggenger.message_manager.action import Action
