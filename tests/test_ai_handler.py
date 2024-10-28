@@ -28,14 +28,14 @@ def test_categorize_message_success(mock_openai_create, mock_message):
     mock_response.choices = [Mock(message=Mock(content='{"message_type": "1", "params": {}}'))]
     mock_openai_create.return_value = mock_response
 
-    handler = OpenAIHandler(api_key="test_api_key", model="gpt-4o-mini")
+    handler = OpenAIHandler(api_key="test_api_key", model="gpt-4o")
     system_message = "Categorize the following message."
 
     response = handler.categorize_message(mock_message, system_message)
 
     # Verify the call to OpenAI API
     mock_openai_create.assert_called_once_with(
-        model="gpt-4o-mini",
+        model="gpt-4o",
         messages=[
             {"role": "system", "content": system_message},
             {"role": "user", "content": "This is a test message"},
