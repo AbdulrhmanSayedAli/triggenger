@@ -120,37 +120,37 @@ class MessageManager:
             ValueError: If the response cannot be parsed or if required fields are missing.
         """
         try:
-            # Step 1: Generate a system message using AI handler
-            system_message = self.generate_system_categorize_message()
-
-            # Step 2: Categorize the message and clean the response string
-            response_str = self.ai_handler.send_message(message, system_message)
-            response_str = self._clean_response_str(response_str)
-
-            # Step 3: Parse the response into JSON
-            response = json.loads(response_str)
-            message_type = int(response["type"])  # Default to -1 if type is missing
+            categorize_system_message = self.generate_system_categorize_message()
+            response = self._send_request(message.display(), categorize_system_message)
+            message_type = int(response["type"])
 
             if message_type == 0:
                 # Trigger action if no match is found
                 self.trigger.onMessageNotMatched(message)
             elif message_type > 0:
                 # Execute the matched action with provided parameters
+                perform_system_message = self.generate_system_perform_message()
                 action = self._get_action_by_type(message_type)
+                response = self._send_request(
+                    f"Message Type\n:{action.display_with_task()}\n Message:\n{message.display()}",
+                    perform_system_message,
+                )
                 params = response.get("params", {})
                 self.trigger.onMessageMatched(message, action, params)
             else:
                 raise ValueError(f"Unexpected message type: {message_type}")
 
         except json.JSONDecodeError as e:
-            # Handle JSON decoding errors
             self.trigger.onMessageError(message, f"JSON parsing error: {e}")
         except KeyError as e:
-            # Handle missing keys in the response dictionary
             self.trigger.onMessageError(message, f"Missing key in response: {e}")
         except Exception as e:
-            # Handle all other exceptions
             self.trigger.onMessageError(message, f"Error processing message: {e}")
+
+    def _send_request(self, message: str, system_message: str):
+        response_str = self.ai_handler.send_message(message, system_message)
+        response_str = self._clean_response_str(response_str)
+        return json.loads(response_str)
 
     def _clean_response_str(self, response_str: str) -> str:
         """

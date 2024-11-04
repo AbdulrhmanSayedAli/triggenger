@@ -1,9 +1,10 @@
 import pytest
-from unittest.mock import Mock
+from unittest.mock import Mock, call
 from triggenger.message_manager.message import Message
 from triggenger.message_manager.trigger import Trigger
 from triggenger.message_manager.ai_handler import AIHandler
 from triggenger.message_manager.message_manager import MessageManager
+from triggenger.message_manager.action import Action
 import json
 
 
@@ -12,7 +13,9 @@ import json
 def mock_trigger():
     trigger = Mock(spec=Trigger)
     trigger.displayActions.return_value = ["Action 1", "Action 2"]
-    trigger.actions = [Mock(), Mock()]  # Mock actions
+    action = Mock(spec=Action)
+    action.display_with_task.return_value = "Action 1 with task."
+    trigger.actions = [action, action]  # Mock actions
     trigger.onMessageMatched = Mock()
     trigger.onMessageNotMatched = Mock()
     trigger.onMessageError = Mock()
@@ -63,17 +66,21 @@ def test_generate_system_perform_message(mock_trigger, mock_ai_handler):
     assert system_message == expected_system_message
 
 
-# Test successful message processing with matched action
 def test_process_message_matched(mock_trigger, mock_ai_handler, mock_message):
     message_manager = MessageManager(mock_trigger, mock_ai_handler)
 
-    # Mock the AI handler to return a valid response
     mock_ai_handler.send_message.return_value = '{"type": "1", "params": {"param1": "value1"}}'
-
-    # Call process_message
     message_manager.process_message(mock_message)
 
-    # Check if onMessageMatched was called with correct parameters
+    expected_calls = [
+        call(mock_message.display(), message_manager.generate_system_categorize_message()),
+        call(
+            f"Message Type\n:{mock_trigger.actions[0].display_with_task()}\n Message:\n{mock_message.display()}",
+            message_manager.generate_system_perform_message(),
+        ),
+    ]
+    mock_ai_handler.send_message.assert_has_calls(expected_calls)
+
     mock_trigger.onMessageMatched.assert_called_once_with(
         mock_message, mock_trigger.actions[0], {"param1": "value1"}  # Action corresponding to type 1
     )
