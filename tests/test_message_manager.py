@@ -4,6 +4,7 @@ from triggenger.message_manager.message import Message
 from triggenger.message_manager.trigger import Trigger
 from triggenger.message_manager.ai_handler import AIHandler
 from triggenger.message_manager.message_manager import MessageManager
+import json
 
 
 # Fixture to create a mock Trigger object
@@ -31,20 +32,31 @@ def mock_message():
     return Mock(spec=Message)
 
 
-# Test the system message generation
-def test_generate_system_message(mock_trigger, mock_ai_handler):
+def test_generate_system_categorize_message(mock_trigger, mock_ai_handler):
     message_manager = MessageManager(mock_trigger, mock_ai_handler)
 
-    system_message = message_manager.generate_system_message()
+    system_message = message_manager.generate_system_categorize_message()
 
     expected_message = {
-        "purpose": message_manager.system_message_template["purpose"],
-        "instructions": message_manager.system_message_template["instructions"],
+        "purpose": message_manager.system_message_categorize_template["purpose"],
+        "instructions": message_manager.system_message_categorize_template["instructions"],
         "message_types": ["Action 1", "Action 2"],
     }
 
-    # Convert expected message to JSON format to match the method output
-    import json
+    expected_system_message = json.dumps(expected_message)
+
+    assert system_message == expected_system_message
+
+
+def test_generate_system_perform_message(mock_trigger, mock_ai_handler):
+    message_manager = MessageManager(mock_trigger, mock_ai_handler)
+
+    system_message = message_manager.generate_system_perform_message()
+
+    expected_message = {
+        "purpose": message_manager.system_message_perform_template["purpose"],
+        "instructions": message_manager.system_message_perform_template["instructions"],
+    }
 
     expected_system_message = json.dumps(expected_message)
 

@@ -14,49 +14,60 @@ class MessageManager:
         trigger (Trigger): The trigger instance that defines actions and responses.
         ai_handler (AIHandler): The AI handler responsible for generating system messages
                                 and categorizing the message content.
-        system_message_template : dict
+        system_message_categorize_template : dict
                 A template for the system message, defining the purpose and instructions
-                for the AI model.
+                for the AI model to categorize the given message.
+        system_message_categorize_template : dict
+                A template for the system message, defining the purpose and instructions
+                for the AI model to categorize the given message.
+        system_message_perform_template : dict
+                A template for the system message, defining the purpose and instructions
+                for the AI model to perform a task on the given message.
     """
 
-    system_message_template = {
-        "purpose": (
-            "Classify incoming messages, extract key parameters, and generate necessary text based on predefined "
-            "message types."
-        ),
+    system_message_categorize_template = {
+        "purpose": "Classify incoming messages based on predefined message types.",
         "instructions": [
             "You will receive a series of messages.",
             (
                 "For each message, assign it to exactly one of the predefined message types. If a message could fit "
                 "multiple types, choose the most relevant one."
             ),
+            'Respond in the following JSON format: {"type": "message type number"}.',
             (
-                "Extract the required parameters for the assigned message type, following the parameter format: "
-                "(param_name: description of what to extract). If a parameter is not present in the message, leave its "
-                "value as an empty string."
-            ),
-            (
-                "If a parameter requires additional information to be meaningful or complete, generate a relevant "
-                "text or value based on the context of the message."
-            ),
-            (
-                'Respond in the following JSON format: {"type": "message type number", "params": {"param1": "value1", '
-                '"param2": "value2", ...}}.'
-            ),
-            (
-                "If the message does not fit any of the predefined types, assign it to type 0, with an empty 'params' "
-                "object."
+                "If the message is too ambiguous or noisy to categorize or does not fit any of the predefined types, "
+                "assign it to type 0"
             ),
             (
                 "Ensure that all responses are in valid JSON format. In case of unclear or incomplete messages, do "
-                "your best to classify them and provide the most relevant information."
-            ),
-            (
-                "If the message is too ambiguous or noisy to categorize, classify it as type 0 and explain why it's "
-                "uncategorizable in a comment."
+                "your best to classify them."
             ),
             ("Don't write any comments in the response only return the json response."),
-            'Here is an example of a response: {"type": "2", "params": {"param1": "example value", "param2": ""}}.',
+            'Here is an example of a response: {"type": "2"}.',
+        ],
+    }
+
+    system_message_perform_template = {
+        "purpose": "Extract parameters and generate text based on a predefined message type.",
+        "instructions": [
+            "You will receive a user message that aligns with a specific, predefined message type.",
+            "Perform the task specified by the message type on the received message.",
+            (
+                "After completing the task, extract, generate, or incorporate the task results into the parameters "
+                "defined by the message type."
+            ),
+            (
+                "Identify and extract the required parameters for the given message type, following this format: "
+                "(param_name: description of the parameter to be extracted or generated). If a parameter is absent in "
+                "the message, leave its value as an empty string."
+            ),
+            (
+                "For parameters needing additional context to be meaningful, generate relevant text or values "
+                "based on the message’s context."
+            ),
+            'Return the response in this JSON format: {"params": {"param1": "value1", "param2": "value2", ...}}.',
+            "Do not include any comments or additional text in the response, only the JSON output.",
+            'Example response: {"params": {"param1": "example value", "param2": ""}}.',
         ],
     }
 
@@ -71,7 +82,7 @@ class MessageManager:
         self.trigger = trigger
         self.ai_handler = ai_handler
 
-    def generate_system_message(self) -> str:
+    def generate_system_categorize_message(self) -> str:
         """
         Generates a system message for the AI model, incorporating the message types
         defined in the given Trigger.
@@ -81,8 +92,20 @@ class MessageManager:
         str
             A JSON string representation of the system message, including message types.
         """
-        current_system_message = copy.deepcopy(self.system_message_template)
+        current_system_message = copy.deepcopy(self.system_message_categorize_template)
         current_system_message["message_types"] = self.trigger.displayActions()
+        return json.dumps(current_system_message)
+
+    def generate_system_perform_message(self) -> str:
+        """
+        Generates a system message for the AI model, to perform the required task on this message.
+
+        Returns:
+        --------
+        str
+            A JSON string representation of the system message.
+        """
+        current_system_message = copy.deepcopy(self.system_message_perform_template)
         return json.dumps(current_system_message)
 
     def process_message(self, message: Message):
@@ -98,7 +121,7 @@ class MessageManager:
         """
         try:
             # Step 1: Generate a system message using AI handler
-            system_message = self.generate_system_message()
+            system_message = self.generate_system_categorize_message()
 
             # Step 2: Categorize the message and clean the response string
             response_str = self.ai_handler.categorize_message(message, system_message)

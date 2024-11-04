@@ -29,6 +29,8 @@ class Action:
         A short, human-readable name for the action.
     description : str
         A brief description of the action.
+    task : str
+        A concise description of the task required by this action.
     params_description : list of str
         A list of descriptions for the parameters required by the action.
     perform : ActionPerformCallable
@@ -36,11 +38,15 @@ class Action:
 
     Methods:
     --------
-    No explicit perform method. The perform function is passed during initialization
-    and is used directly.
+    display() -> str
+        Returns a structured string summarizing the action's details.
+    display_with_task() -> str
+        Returns a structured string summarizing the action's details, including the task.
     """
 
-    def __init__(self, title: str, description: str, params_description: list, perform: ActionPerformCallable):
+    def __init__(
+        self, title: str, description: str, task: str, params_description: list, perform: ActionPerformCallable
+    ):
         """
         Initializes the Action instance with a custom perform function.
 
@@ -50,6 +56,8 @@ class Action:
             A short, human-readable name for the action.
         description : str
             A brief description of the action.
+        task : str
+            A concise description of the task required by this action.
         params_description : list of str
             A list of descriptions for the parameters required by the action.
         perform : function
@@ -59,13 +67,13 @@ class Action:
         """
         self.title = title
         self.description = description
+        self.task = task
         self.params_description = params_description
         self.perform = perform
 
     def display(self) -> str:
         """
-        Returns a structured string that represents the action details: title, description,
-        and parameter descriptions in a format that's easy for AI systems to read.
+        Provides a detailed, formatted string representing the action's information.
 
         Returns:
         --------
@@ -73,11 +81,23 @@ class Action:
             A formatted string containing the action's details in a readable format.
         """
         details = f"Title: {self.title}\n"
-        details += f"Description: {self.description}\n"
-        details += "Parameter Descriptions:\n"
+        details += f"Description of this message type: {self.description}\n"
+        details += "Parameter Descriptions to be extracted or generated:\n"
         details += "[" + ",".join(self.params_description) + "]"
 
         return details.strip()
+
+    def display_with_task(self) -> str:
+        """
+        Provides a detailed, formatted string representing the action's information, including the task.
+
+        Returns:
+        --------
+        str
+            A formatted string containing the title, description, parameter descriptions, and task.
+        """
+        details = f"{self.display()}\n" f"Required Task: {self.task}"
+        return details
 
     def __str__(self):
         return f"Action(title='{self.title}', description='{self.description}')"
