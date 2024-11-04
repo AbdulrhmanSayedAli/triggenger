@@ -1,5 +1,4 @@
 import openai
-from triggenger.message_manager.message import Message
 from abc import ABC, abstractmethod
 
 
@@ -11,21 +10,21 @@ class AIHandler(ABC):
     """
 
     @abstractmethod
-    def send_message(self, message: Message, system_message: str) -> str:
+    def send_message(self, message: str, system_message: str) -> str:
         """
         Sends a message to the AI system for categorization and parameter extraction.
 
         Parameters:
         -----------
-        message : Message
-            The Message object to be categorized.
+        message : str
+            The Message to be sent.
         system_message : str
-            A system message that instructs the AI model on how to categorize the user message.
+            A system message that instructs the AI model.
 
         Returns:
         --------
         str
-            The AI's response containing the message type and extracted parameters in JSON format.
+            The AI's response.
 
         Raises:
         -------
@@ -55,7 +54,7 @@ class OpenAIHandler(AIHandler):
         self.model = model
         openai.api_key = api_key
 
-    def send_message(self, message: Message, system_message: str) -> str:
+    def send_message(self, message: str, system_message: str) -> str:
         """
         Sends the given message to the OpenAI API for categorization and parameter extraction.
 
@@ -78,7 +77,7 @@ class OpenAIHandler(AIHandler):
         """
         messages = [
             {"role": "system", "content": system_message},
-            {"role": "user", "content": message.display()},
+            {"role": "user", "content": message},
         ]
 
         try:
