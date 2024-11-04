@@ -68,7 +68,7 @@ def test_process_message_matched(mock_trigger, mock_ai_handler, mock_message):
     message_manager = MessageManager(mock_trigger, mock_ai_handler)
 
     # Mock the AI handler to return a valid response
-    mock_ai_handler.categorize_message.return_value = '{"type": "1", "params": {"param1": "value1"}}'
+    mock_ai_handler.send_message.return_value = '{"type": "1", "params": {"param1": "value1"}}'
 
     # Call process_message
     message_manager.process_message(mock_message)
@@ -84,7 +84,7 @@ def test_process_message_not_matched(mock_trigger, mock_ai_handler, mock_message
     message_manager = MessageManager(mock_trigger, mock_ai_handler)
 
     # Mock the AI handler to return a type 0 response
-    mock_ai_handler.categorize_message.return_value = '{"type": "0", "params": {}}'
+    mock_ai_handler.send_message.return_value = '{"type": "0", "params": {}}'
 
     # Call process_message
     message_manager.process_message(mock_message)
@@ -98,7 +98,7 @@ def test_process_message_json_error(mock_trigger, mock_ai_handler, mock_message)
     message_manager = MessageManager(mock_trigger, mock_ai_handler)
 
     # Mock the AI handler to return an invalid JSON
-    mock_ai_handler.categorize_message.return_value = "invalid json"
+    mock_ai_handler.send_message.return_value = "invalid json"
 
     # Call process_message
     message_manager.process_message(mock_message)
@@ -114,7 +114,7 @@ def test_process_message_unexpected_type(mock_trigger, mock_ai_handler, mock_mes
     message_manager = MessageManager(mock_trigger, mock_ai_handler)
 
     # Mock the AI handler to return a response with an unexpected type
-    mock_ai_handler.categorize_message.return_value = '{"type": "-1", "params": {}}'
+    mock_ai_handler.send_message.return_value = '{"type": "-1", "params": {}}'
 
     # Call process_message
     message_manager.process_message(mock_message)
@@ -130,7 +130,7 @@ def test_process_message_missing_key(mock_trigger, mock_ai_handler, mock_message
     message_manager = MessageManager(mock_trigger, mock_ai_handler)
 
     # Mock the AI handler to return a response with a missing key
-    mock_ai_handler.categorize_message.return_value = '{"params": {}}'  # 'type' key is missing
+    mock_ai_handler.send_message.return_value = '{"params": {}}'  # 'type' key is missing
 
     # Call process_message
     message_manager.process_message(mock_message)

@@ -124,7 +124,7 @@ class MessageManager:
             system_message = self.generate_system_categorize_message()
 
             # Step 2: Categorize the message and clean the response string
-            response_str = self.ai_handler.categorize_message(message, system_message)
+            response_str = self.ai_handler.send_message(message, system_message)
             response_str = self._clean_response_str(response_str)
 
             # Step 3: Parse the response into JSON

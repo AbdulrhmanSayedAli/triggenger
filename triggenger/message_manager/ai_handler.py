@@ -7,11 +7,11 @@ class AIHandler(ABC):
     """
     Abstract base class for handling interactions with AI systems to categorize messages
     and extract parameters based on predefined message types.
-    Subclasses must implement the `categorize_message` method.
+    Subclasses must implement the `send_message` method.
     """
 
     @abstractmethod
-    def categorize_message(self, message: Message, system_message: str) -> str:
+    def send_message(self, message: Message, system_message: str) -> str:
         """
         Sends a message to the AI system for categorization and parameter extraction.
 
@@ -55,7 +55,7 @@ class OpenAIHandler(AIHandler):
         self.model = model
         openai.api_key = api_key
 
-    def categorize_message(self, message: Message, system_message: str) -> str:
+    def send_message(self, message: Message, system_message: str) -> str:
         """
         Sends the given message to the OpenAI API for categorization and parameter extraction.
 
